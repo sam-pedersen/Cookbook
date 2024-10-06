@@ -1,13 +1,7 @@
 import { Router } from 'express'
 import multer from 'multer'
 import mammoth from 'mammoth'
-import {
-  getAllRecipes,
-  getRecipeById,
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-} from '../db/recipe' // Import the model functions
+import { getAllRecipes, getRecipeById, createRecipe } from '../db/recipe' // Import the model functions
 import { StatusCodes } from 'http-status-codes'
 import { RecipeData } from '../../models/recipe'
 
@@ -74,48 +68,6 @@ router.post('/', upload.single('recipeFile'), async (req, res) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: 'Failed to create recipe' })
-  }
-})
-
-// PATCH: Update a recipe by ID
-router.patch('/:id', async (req, res) => {
-  try {
-    const id = Number(req.params.id)
-    const updatedRecipe = req.body // Ensure your request body has the required fields
-
-    const success = await updateRecipe(updatedRecipe, id) // Call updateRecipe function
-    if (!success) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: 'Recipe not found' })
-    }
-
-    res.sendStatus(StatusCodes.OK) // Send 200 OK if update was successful
-  } catch (error) {
-    console.error(`Database error: ${error}`)
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: 'Failed to update recipe' })
-  }
-})
-
-// DELETE: Delete a recipe by ID
-router.delete('/:id', async (req, res) => {
-  try {
-    const id = Number(req.params.id)
-    const success = await deleteRecipe(id) // Call deleteRecipe function
-    if (!success) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: 'Recipe not found' })
-    }
-
-    res.sendStatus(StatusCodes.NO_CONTENT) // Send 204 No Content on successful deletion
-  } catch (error) {
-    console.error(`Database error: ${error}`)
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: 'Failed to delete recipe' })
   }
 })
 

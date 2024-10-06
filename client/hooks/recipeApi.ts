@@ -1,14 +1,32 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
-import { Recipe } from '../../models/recipe' // Adjust path if necessary
-import { getRecipes } from '../apis/recipesAPI' // Ensure these functions are correctly defined
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
+import { Recipe } from '../../models/recipe'
 
 // Fetch all recipes
 export const useRecipes = () => {
-  // Define your query key and query function
-  return useQuery<Recipe[], Error>({
-    queryKey: ['recipes'], // This is your query key
-    queryFn: getRecipes, // This is the function that fetches the data
-  })
+  const queryKey = ['recipes'] // Define the query key
+  const queryFn = async (): Promise<Recipe[]> => {
+    const response = await fetch('/api/v1/recipes')
+    if (!response.ok) {
+      throw new Error('Failed to fetch recipes')
+    }
+    return response.json()
+  }
+
+  return useQuery<Recipe[]>(queryKey, queryFn)
+}
+
+// Fetch a single recipe by ID
+export const useRecipeById = (id: number) => {
+  const queryKey = ['recipe', id] // Define the query key
+  const queryFn = async (): Promise<Recipe> => {
+    const response = await fetch(`/api/v1/recipes/${id}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch recipe')
+    }
+    return response.json()
+  }
+
+  return useQuery<Recipe>(queryKey, queryFn)
 }
 
 // Create a new recipe

@@ -1,30 +1,31 @@
-import db from './connection' // Import your database connection
-import { Recipe, RecipeData } from '../../models/recipe' // Adjust the path based on your structure
+import db from './connection'
+import { Recipe, RecipeData } from '../../models/recipe' // Assuming you have types defined
 
-// Fetch all recipes
+// Get all recipes
 export async function getAllRecipes(): Promise<Recipe[]> {
-  return db('recipes').select()
+  return db('recipes').select('*')
 }
 
-// Fetch a recipe by ID
-export async function getRecipeById(id: number): Promise<Recipe | undefined> {
-  const recipes = await db('recipes').where('id', id).select()
-  return recipes.length ? recipes[0] : undefined // Return the recipe or undefined
+// Get a single recipe by ID
+export async function getRecipeById(id: number): Promise<Recipe | null> {
+  const recipe = await db('recipes').where({ id }).first()
+  return recipe || null
 }
 
 // Create a new recipe
-export async function createRecipe(data: RecipeData) {
-  return await db('recipes').insert(data)
+export async function createRecipe(recipeData: RecipeData): Promise<void> {
+  await db('recipes').insert(recipeData)
 }
 
-// Update an existing recipe by ID
-export async function updateRecipe(data: RecipeData, id: number) {
-  const result = await db('recipes').where('id', id).update(data)
-  return result > 0 // Return true if at least one row was updated
+// Update a recipe by ID
+export async function updateRecipe(
+  id: number,
+  updatedRecipe: Partial<Recipe>,
+): Promise<void> {
+  await db('recipes').where({ id }).update(updatedRecipe)
 }
 
 // Delete a recipe by ID
-export async function deleteRecipe(id: number) {
-  const result = await db('recipes').where({ id }).delete()
-  return result > 0 // Return true if at least one row was deleted
+export async function deleteRecipe(id: number): Promise<void> {
+  await db('recipes').where({ id }).del()
 }

@@ -1,31 +1,11 @@
-import { useRecipes } from '../hooks/recipeApi'
-import { Recipe } from '../../models/recipe'
+import { Outlet } from 'react-router-dom'
 
 function App() {
-  const { data } = useRecipes()
-
   return (
-    <>
-      <div className="app">
-        <h1 className="text-3xl font-bold underline">Fullstack Boilerplate</h1>
-        <ul>
-          {data &&
-            data.map((recipe: Recipe) => (
-              <li key={recipe.id}>
-                {' '}
-                {/* Use the unique id as the key */}
-                <h2>{recipe.title}</h2>
-                <p>
-                  <strong>Ingredients:</strong> {recipe.ingredients}
-                </p>
-                <p>
-                  <strong>Instructions:</strong> {recipe.instructions}
-                </p>
-              </li>
-            ))}
-        </ul>
-      </div>
-    </>
+    <div>
+      <h1>Welcome to Recipe App</h1>
+      <Outlet /> {/* Renders the child route component */}
+    </div>
   )
 }
 
