@@ -1,15 +1,15 @@
-import { useFruits } from '../hooks/useFruits.ts'
+import { useRecipes } from '../hooks/recipeApi'
 
 function App() {
-  const { data } = useFruits()
+  const { data } = useRecipes()
 
   return (
     <>
       <div className="app">
-        <h1 className="text-3xl font-bold underline">
-          Fullstack Boilerplate - with Fruits!
-        </h1>
-        <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul>
+        <h1 className="text-3xl font-bold underline">Fullstack Boilerplate</h1>
+        <ul>
+          {data && data.map((recipes) => <li key={recipes}>{recipes}</li>)}
+        </ul>
       </div>
     </>
   )
