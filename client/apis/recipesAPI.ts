@@ -2,7 +2,7 @@
 
 import request from 'superagent'
 import { Recipe } from '../../models/recipe'
-const API_URL = '/api/recipes' // Adjust base URL as needed
+const API_URL = '/api/v1/recipes' // Adjust base URL as needed
 
 // Fetch all recipes
 export function getRecipes(): Promise<Recipe[]> {

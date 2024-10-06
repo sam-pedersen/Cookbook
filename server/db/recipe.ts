@@ -1,21 +1,30 @@
-// src/recipeApi.ts
-
-import request from 'superagent'
-
-const API_URL = '/api/v1/recipes' // Adjust base URL as needed
+import db from './connection' // Import your database connection
+import { Recipe, RecipeData } from '../../models/recipe' // Adjust the path based on your structure
 
 // Fetch all recipes
-export function getRecipes(): Promise<unknown[]> {
-  return request.get(API_URL).then((res) => res.body) // Assuming the response has the recipes in the body
+export async function getAllRecipes(): Promise<Recipe[]> {
+  return db('recipes').select()
+}
+
+// Fetch a recipe by ID
+export async function getRecipeById(id: number): Promise<Recipe | undefined> {
+  const recipes = await db('recipes').where('id', id).select()
+  return recipes.length ? recipes[0] : undefined // Return the recipe or undefined
 }
 
 // Create a new recipe
-export function createRecipe(file: File): Promise<unknown> {
-  const formData = new FormData()
-  formData.append('recipeFile', file)
+export async function createRecipe(data: RecipeData) {
+  return await db('recipes').insert(data)
+}
 
-  return request
-    .post(API_URL)
-    .send(formData)
-    .then((res) => res.body)
+// Update an existing recipe by ID
+export async function updateRecipe(data: RecipeData, id: number) {
+  const result = await db('recipes').where('id', id).update(data)
+  return result > 0 // Return true if at least one row was updated
+}
+
+// Delete a recipe by ID
+export async function deleteRecipe(id: number) {
+  const result = await db('recipes').where({ id }).delete()
+  return result > 0 // Return true if at least one row was deleted
 }
