@@ -14,7 +14,7 @@ function App() {
               <li key={recipe.id}>
                 {' '}
                 {/* Use the unique id as the key */}
-                <h3>{recipe.title}</h3>
+                <h2>{recipe.title}</h2>
                 <p>
                   <strong>Ingredients:</strong> {recipe.ingredients}
                 </p>
