@@ -14,15 +14,19 @@ const Home = () => {
   }
 
   return (
-    <div>
-      <h1>Recipes</h1>
-      <div className="recipe-list">
+    <div className="container mx-auto p-4">
+      <h1 className="mb-8 text-center text-4xl font-bold">Recipes</h1>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {recipes.map((recipe: Recipe) => (
-          <div key={recipe.id} className="recipe-card">
+          <div
+            key={recipe.id}
+            className="recipe-card rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
+          >
             <Link to={`/recipe/${recipe.id}`}>
-              <h3>{recipe.title}</h3>
-              <p>{recipe.ingredients.substring(0, 100)}...</p>{' '}
-              {/* Display a snippet */}
+              <h3 className="mb-2 text-xl font-semibold">{recipe.title}</h3>
+              <p className="text-gray-600">
+                {recipe.ingredients.substring(0, 100)}...
+              </p>
             </Link>
           </div>
         ))}
