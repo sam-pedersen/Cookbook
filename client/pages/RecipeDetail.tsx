@@ -14,7 +14,7 @@ const RecipeDetail = () => {
       {/* Recipe Image */}
       <div className="mb-6">
         <img
-          src={`/path-to-image/${recipe.id}.jpg`} // Placeholder for an actual image
+          src={`../../Public${recipe.id}.jpg`} // Placeholder for an actual image
           alt={recipe.title}
           className="h-96 w-full rounded-lg object-cover shadow-lg"
         />
