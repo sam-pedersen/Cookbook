@@ -23,7 +23,17 @@ const RecipeDetail = () => {
       {/* Recipe Title */}
       <h1 className="mb-4 text-5xl font-bold">{recipe.title}</h1>
 
-      {/* Ingredients */}
+      {/* Narrative Section */}
+      {recipe.narrative && (
+        <section className="mb-8">
+          <h2 className="mb-4 text-3xl font-semibold">Narrative</h2>
+          <p className="whitespace-pre-line text-lg text-gray-700">
+            {recipe.narrative}
+          </p>
+        </section>
+      )}
+
+      {/* Ingredients Section */}
       <section className="mb-8">
         <h2 className="mb-4 text-3xl font-semibold">Ingredients</h2>
         <ul className="list-disc space-y-2 pl-5 text-lg text-gray-700">
@@ -33,7 +43,7 @@ const RecipeDetail = () => {
         </ul>
       </section>
 
-      {/* Instructions */}
+      {/* Instructions Section */}
       <section>
         <h2 className="mb-4 text-3xl font-semibold">Instructions</h2>
         <p className="whitespace-pre-line text-lg text-gray-700">
