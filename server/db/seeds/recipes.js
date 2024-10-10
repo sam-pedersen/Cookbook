@@ -3,7 +3,6 @@ import path from 'path'
 import mammoth from 'mammoth'
 import { fileURLToPath } from 'url'
 
-// Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -19,10 +18,9 @@ async function extractTextFromDocx(docPath) {
 }
 
 export async function seed(knex) {
-  // Deletes ALL existing entries
   await knex('recipes').del()
 
-  const docsDir = path.join(__dirname, '../data') // Adjust if necessary
+  const docsDir = path.join(__dirname, '../data')
   const wordFiles = [
     '1-Apricots-Summer-2024.docx',
     '2-Mustard-2024.docx',
@@ -36,34 +34,52 @@ export async function seed(knex) {
   for (const file of wordFiles) {
     const filePath = path.join(docsDir, file)
 
-    // Check if the file exists
     if (!fs.existsSync(filePath)) {
       console.error(`File not found: ${filePath}`)
-      continue // Skip to the next file if not found
+      continue
     }
 
     const docContent = await extractTextFromDocx(filePath)
+    const recipeContent = docContent
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line)
 
-    // Process the docContent to split title, ingredients, and instructions
-    const recipeContent = docContent.split('\n')
-    const title = recipeContent[0] // Assume the first line is the title
-    const ingredients = recipeContent.slice(1, -1).join('\n') // Assume the rest until the last line are ingredients
-    const instructions = recipeContent[recipeContent.length - 1] // Assume the last line is instructions
+    const title = recipeContent[0]
+    const narrative = recipeContent
+      .slice(1, recipeContent.indexOf('Ingredients:'))
+      .join('\n')
+      .trim()
+    const ingredientsStart = recipeContent.indexOf('Ingredients:') + 1
+    const instructionsStart = recipeContent.indexOf('Instructions:') + 1
+
+    const ingredients = recipeContent
+      .slice(ingredientsStart, instructionsStart - 1)
+      .join('\n')
+      .trim()
+    const instructions = recipeContent
+      .slice(instructionsStart)
+      .join('\n')
+      .trim()
+
+    const imagePath = `images/${title.replace(/\s+/g, '-').toLowerCase()}.jpg`
 
     recipes.push({
       title,
+      narrative,
       ingredients,
       instructions,
+      image: imagePath,
     })
   }
 
-  // Inserts the recipes extracted from Word documents
   await knex('recipes').insert(
-    recipes.map((recipe, index) => ({
-      id: index + 1,
+    recipes.map((recipe) => ({
       title: recipe.title,
+      narrative: recipe.narrative,
       ingredients: recipe.ingredients,
       instructions: recipe.instructions,
+      image: recipe.image,
       created_at: new Date().toISOString(),
     })),
   )

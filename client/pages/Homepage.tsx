@@ -8,7 +8,6 @@ const Home = () => {
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>Failed to load recipes</p>
 
-  // Explicitly check that recipes is an array before mapping
   if (!recipes || !Array.isArray(recipes)) {
     return <p>No recipes available</p>
   }

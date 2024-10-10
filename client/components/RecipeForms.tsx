@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useCreateRecipe } from '../hooks/recipeApi'
-import { Recipe } from '../../models/recipe' // Adjust path as necessary
+import { Recipe } from '../../models/recipe'
 
 const RecipeForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -20,8 +20,8 @@ const RecipeForm: React.FC = () => {
       mutation.mutate(file, {
         onSuccess: (data: Recipe) => {
           setMessage('Recipe uploaded successfully!')
-          console.log('Uploaded Recipe:', data) // Log the uploaded recipe for debugging
-          setFile(null) // Reset the file input
+          console.log('Uploaded Recipe:', data)
+          setFile(null)
         },
         onError: (error: Error) => {
           setMessage(`Failed to upload recipe: ${error.message}`)
