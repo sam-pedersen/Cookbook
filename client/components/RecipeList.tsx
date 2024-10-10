@@ -1,11 +1,9 @@
-// src/components/RecipeList.tsx
-
 import React from 'react'
 import { useRecipes } from '../hooks/recipeApi'
-import { Recipe } from '../../models/recipe' // Ensure this points to your Recipe type
+import { Recipe } from '../../models/recipe'
 
 const RecipeList: React.FC = () => {
-  const { data: recipes = [], isLoading, isError } = useRecipes() // Default to an empty array
+  const { data: recipes = [], isLoading, isError } = useRecipes()
 
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error loading recipes</p>

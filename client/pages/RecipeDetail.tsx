@@ -10,52 +10,55 @@ const RecipeDetail = () => {
   if (!recipe) return <p>Recipe not found</p>
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Recipe Image */}
-      <div className="mb-6">
+    <div className="container mx-auto max-w-screen-lg p-8">
+      <div className="mb-12">
         <img
-          src={`/path-to-image/${recipe.id}.jpg`} // Placeholder for an actual image
+          src={`/${recipe.image}`}
           alt={recipe.title}
-          className="h-96 w-full rounded-lg object-cover shadow-lg"
+          className="h-auto w-full rounded-lg object-cover shadow-lg"
         />
       </div>
 
-      {/* Recipe Title */}
-      <h1 className="mb-4 text-5xl font-bold">{recipe.title}</h1>
+      <h1 className="mb-8 text-center text-5xl font-extrabold tracking-tight text-gray-900">
+        {recipe.title}
+      </h1>
 
-      {/* Narrative Section */}
-      {recipe.narrative && (
-        <section className="mb-8">
-          <h2 className="mb-4 text-3xl font-semibold">Narrative</h2>
-          <p className="whitespace-pre-line text-lg text-gray-700">
-            {recipe.narrative}
-          </p>
-        </section>
-      )}
+      <section className="mb-12">
+        <h2 className="mb-6 text-center text-3xl font-bold text-gray-800">
+          Description
+        </h2>
+        <div className="mx-auto max-w-lg text-lg leading-relaxed text-gray-600">
+          {recipe.narrative}
+        </div>
+      </section>
 
-      {/* Ingredients Section */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-3xl font-semibold">Ingredients</h2>
-        <ul className="list-disc space-y-2 pl-5 text-lg text-gray-700">
-          {recipe.ingredients.split('\n').map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
-          ))}
+      <section className="mb-12">
+        <h2 className="mb-6 text-center text-3xl font-bold text-gray-800">
+          Ingredients
+        </h2>
+        <ul className="font-georgia mx-auto max-w-lg list-inside list-disc space-y-4 text-lg text-gray-600">
+          {recipe.ingredients
+            .split('\n')
+            .filter((ingredient: string) => ingredient.trim() !== '')
+            .map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
+            ))}
         </ul>
       </section>
 
-      {/* Instructions Section */}
-      <section>
-        <h2 className="mb-4 text-3xl font-semibold">Instructions</h2>
-        <p className="whitespace-pre-line text-lg text-gray-700">
+      <section className="mb-16">
+        <h2 className="mb-6 text-center text-3xl font-bold text-gray-800">
+          Instructions
+        </h2>
+        <p className="mx-auto max-w-lg whitespace-pre-line text-lg leading-relaxed text-gray-600">
           {recipe.instructions}
         </p>
       </section>
 
-      {/* Back to Home Button */}
-      <div className="mt-8">
+      <div className="mt-12 flex justify-center">
         <button
           onClick={() => window.history.back()}
-          className="rounded bg-gray-800 px-4 py-2 text-white transition-colors hover:bg-gray-600"
+          className="transform rounded-full bg-black px-6 py-3 text-lg font-semibold text-white transition-transform hover:scale-105"
         >
           Back to Recipes
         </button>

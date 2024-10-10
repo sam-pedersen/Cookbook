@@ -1,12 +1,10 @@
-// src/recipeApi.ts
-
 import request from 'superagent'
 import { Recipe } from '../../models/recipe'
-const API_URL = '/api/v1/recipes' // Adjust base URL as needed
+const API_URL = '/api/v1/recipes'
 
 // Fetch all recipes
 export function getRecipes(): Promise<Recipe[]> {
-  return request.get(API_URL).then((res) => res.body) // Assuming the response has the recipes in the body
+  return request.get(API_URL).then((res) => res.body)
 }
 
 // Create a new recipe
