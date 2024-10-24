@@ -3,7 +3,6 @@ import path from 'path'
 import mammoth from 'mammoth'
 import { fileURLToPath } from 'url'
 
-// Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -22,7 +21,6 @@ async function extractParagraphsFromDocx(docPath) {
 }
 
 export async function seed(knex) {
-  // Deletes ALL existing entries
   await knex('recipes').del()
 
   const docsDir = path.join(__dirname, '../data')
@@ -39,7 +37,6 @@ export async function seed(knex) {
   for (const file of wordFiles) {
     const filePath = path.join(docsDir, file)
 
-    // Check if the file exists
     if (!fs.existsSync(filePath)) {
       console.error(`File not found: ${filePath}`)
       continue
@@ -52,31 +49,27 @@ export async function seed(knex) {
       continue
     }
 
-    // Assume the first paragraph is the title
     const title = paragraphs[0]
 
-    // Assume the first few paragraphs after the title are the narrative (up to paragraph 3)
-    const narrative = paragraphs.slice(1, 3).join('\n\n').trim()
+    const ingredientsStartIndex = paragraphs.findIndex(
+      (paragraph) =>
+        paragraph.toLowerCase().includes('yield') || paragraph.includes('Jars'),
+    )
 
-    // Heuristic: Assume ingredients are usually shorter and appear next
-    const ingredientsIndex = 3
-    let instructionsIndex = ingredientsIndex + 1
-
-    // Try to infer where ingredients end and instructions start
-    for (let i = ingredientsIndex; i < paragraphs.length; i++) {
-      if (paragraphs[i].split(',').length > 1) {
-        instructionsIndex = i + 1
-        break
-      }
+    if (ingredientsStartIndex === -1) {
+      console.error(`No ingredients section found in ${file}`)
+      continue
     }
 
-    const ingredients = paragraphs
-      .slice(ingredientsIndex, instructionsIndex)
+    const narrative = paragraphs
+      .slice(1, ingredientsStartIndex)
       .join('\n\n')
       .trim()
-    const instructions = paragraphs.slice(instructionsIndex).join('\n\n').trim()
 
-    // Create the image path
+    const recipeContent = paragraphs.slice(ingredientsStartIndex)
+    const ingredients = recipeContent[0] // First recipe-related paragraph (likely ingredients)
+    const instructions = recipeContent.slice(1).join('\n\n').trim() // Remaining paragraphs are instructions
+
     const imagePath = `images/${title.replace(/\s+/g, '-').toLowerCase()}.jpg`
 
     recipes.push({
@@ -87,11 +80,9 @@ export async function seed(knex) {
       image: imagePath,
     })
 
-    // Log the extracted data to verify correctness
     console.log({ title, narrative, ingredients, instructions })
   }
 
-  // Inserts the recipes extracted from Word documents into the database
   await knex('recipes').insert(
     recipes.map((recipe) => ({
       title: recipe.title,
